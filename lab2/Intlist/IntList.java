@@ -98,14 +98,12 @@ public class IntList {
         IntList res = new IntList(A.first, null);
         IntList ptr = res;
         A = A.rest;
-
         while (A != null) {
             ptr.rest = new IntList(A.first, null);
             A = A.rest;
             ptr = ptr.rest;
         }
         ptr.rest = B;
-
         return res;
     }
 
