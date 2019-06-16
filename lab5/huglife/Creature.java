@@ -1,8 +1,6 @@
 package huglife;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Josh Hug
@@ -55,5 +53,19 @@ public abstract class Creature extends Occupant {
      */
     public double energy() {
         return energy;
+    }
+
+    /**
+     * choose a entry from Deque randomly.
+     * @param d Deque to choose.
+     * @return entry been choose.
+     */
+    public static Direction randomEntry(Deque<Direction> d) {
+        Deque<Direction> deque = new ArrayDeque<>(d);
+        int index = (int) (Math.random() * deque.size());
+        for (int i = 0; i < index; ++i) {
+            deque.removeFirst();
+        }
+        return deque.removeFirst();
     }
 }
