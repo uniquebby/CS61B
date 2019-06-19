@@ -1,8 +1,3 @@
-/**
- * A implement of UnionFind with path-compression.
- * @author yangbinbin
- * 2019.06.18
- */
 public class UnionFind {
 
     private int[] parent;
