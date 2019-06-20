@@ -1,0 +1,47 @@
+/usr/lib/jdk-12.0.1/bin/java -javaagent:/usr/local/share/idea-IC-191.7479.19/lib/idea_rt.jar=41377:/usr/local/share/idea-IC-191.7479.19/bin -Dfile.encoding=UTF-8 -classpath /home/bs/learning/cs61b/library-sp19/javalib/algs4.jar:/home/bs/learning/cs61b/library-sp19/javalib/hamcrest-core-1.3.jar:/home/bs/learning/cs61b/library-sp19/javalib/jh61b.jar:/home/bs/learning/cs61b/library-sp19/javalib/junit-4.12.jar:/home/bs/learning/cs61b/library-sp19/javalib/stdlib-package.jar:/home/bs/learning/cs61b/library-sp19/javalib/stdlib.jar:/home/bs/learning/cs61b/library-sp19/javalib/xchart-3.5.1.jar:/home/bs/learning/cs61b/lab8/out/production/lab8 InsertRandomSpeedTest
+
+ This program inserts random Strings of length L
+ Into different types of maps as <String, Integer> pairs.
+
+What would you like L to be?: 20
+
+Enter # strings to insert into ULLMap: 3
+class ULLMap: 0.01 sec
+
+Enter # strings to insert into your MyHashMap: 9999999
+class MyHashMap: 28.71 sec
+
+Enter # strings to insert into Java's HashMap: 9999999
+Java's Built-in HashMap: 15.03 sec
+
+-------------------------------------------------in-order------------------------------------------
+Enter # strings to insert into ULLMap: 20
+class ULLMap: 0.01 sec
+
+Enter # strings to insert into MyHashMap: 999999
+class MyHashMap: 1.44 sec
+
+Enter # strings to insert into Java's HashMap: 999999
+Java's Built-in HashMap: 3.16 sec
+
+Would you like to try more timed-tests? (y/n):
+
+Enter # strings to insert into ULLMap: 9999999
+--Stack Overflow -- couldn't add 9999999 strings.
+
+Enter # strings to insert into MyHashMap: 3000000
+class MyHashMap: 3.32 sec
+
+Enter # strings to insert into Java's HashMap: 3000000
+Java's Built-in HashMap: 1.83 sec
+
+Would you like to try more timed-tests? (y/n):
+
+Enter # strings to insert into ULLMap: 9
+class ULLMap: 0.00 sec
+
+Enter # strings to insert into MyHashMap: 9999999
+class MyHashMap: 12.62 sec
+
+Enter # strings to insert into Java's HashMap: 9999999
+Java's Built-in HashMap: 5.82 sec
