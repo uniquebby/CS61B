@@ -1,0 +1,30 @@
+ initSize:1 subinitSize:1 loadFactor:0.5 subLoadFactor: 0.5
+ fasttime: 2.745
+ initSize:1 subinitSize:1 loadFactor:0.5 subLoadFactor: 1.5
+ fasttime: 1.418
+ initSize:1 subinitSize:1 loadFactor:0.5 subLoadFactor: 2.5
+ fasttime: 1.324
+ initSize:1 subinitSize:1 loadFactor:0.5 subLoadFactor: 4.5
+ fasttime: 1.246
+ initSize:1 subinitSize:1 loadFactor:0.5 subLoadFactor: 7.5
+ fasttime: 1.136
+ initSize:1 subinitSize:1 loadFactor:0.5 subLoadFactor: 14.5
+ fasttime: 1.022
+ initSize:1 subinitSize:1 loadFactor:1.0 subLoadFactor: 3.5
+ fasttime: 0.836
+ initSize:1 subinitSize:1 loadFactor:1.5 subLoadFactor: 3.5
+ fasttime: 0.758
+ initSize:1 subinitSize:1 loadFactor:1.5 subLoadFactor: 12.5
+ fasttime: 0.741
+ initSize:1 subinitSize:1 loadFactor:1.5 subLoadFactor: 15.5
+ fasttime: 0.717
+ initSize:1 subinitSize:1 loadFactor:2.5 subLoadFactor: 2.5
+ fasttime: 0.688
+ initSize:1 subinitSize:3 loadFactor:3.5 subLoadFactor: 3.5
+ fasttime: 0.651
+ initSize:1 subinitSize:4 loadFactor:2.5 subLoadFactor: 4.5
+ fasttime: 0.644
+ initSize:1 subinitSize:4 loadFactor:5.0 subLoadFactor: 1.5
+ fasttime: 0.623
+ fastinitSize:1 fastsubinitSize:4 fastloadFactor:5.0 fastsubLoadFactor: 1.5
+ fasttime: 0.623

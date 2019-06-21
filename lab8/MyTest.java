@@ -1,0 +1,158 @@
+import java.util.HashMap;
+import java.io.IOException;
+import java.util.Scanner;
+import edu.princeton.cs.algs4.Stopwatch;
+
+/** Performs a timing test on three different set implementations.
+ *  @author Josh Hug
+ *  @author Brendan Hu
+ */
+public class MyTest {
+    /**
+     * Requests user input and performs tests of three different set
+     * implementations. ARGS is unused. 
+     */
+    public static void main(String[] args) throws IOException {
+        int N = 599999;
+        int L = 20;
+
+        System.out.println("\n This program inserts random "
+                           + "Strings of length L\n"
+                           + " Into different types of maps "
+                           + "as <String, Integer> pairs.\n");
+
+        String repeat = "y";
+        int fastsize = 0, fastsubsize = 0;
+        double fastld = 0, fastsubld = 0, fasttiem = 9999999.9, temptiem;
+        for (int initSize = 1; initSize <= 4; initSize += 1) {
+            for (int subinitSize = 1; subinitSize <= 16; ++subinitSize) {
+                for (double loadFactor = 0.5; loadFactor <= 16.0; loadFactor += 0.5) {
+                    for (double subLoadFactor = 0.5; subLoadFactor <= 16.0; subLoadFactor += 1) {
+                        temptiem = timeRandomMap61B(new MyHashMap<String, Integer>(initSize, loadFactor, subLoadFactor, subinitSize),
+                            N, L);
+                        //timeRandomHashMap(new HashMap<String, Integer>(),
+                        //       N, L);
+                        if (temptiem < fasttiem) {
+                            fasttiem = temptiem;
+                            fastsize = initSize;
+                            fastsubsize = subinitSize;
+                            fastld = loadFactor;
+                            fastsubld = subLoadFactor;
+                            System.out.print(" initSize:" + initSize);
+                            System.out.print(" subinitSize:" + subinitSize);
+                            System.out.print(" loadFactor:" + loadFactor);
+                            System.out.print(" subLoadFactor: " + subLoadFactor + '\n');
+                            System.out.print(" fasttime: " + fasttiem + '\n');
+                        }
+                    }
+                }
+            }
+        }
+        System.out.print(" fastinitSize:" + fastsize);
+        System.out.print(" fastsubinitSize:" + fastsubsize);
+        System.out.print(" fastloadFactor:" + fastld);
+        System.out.print(" fastsubLoadFactor: " + fastsubld+ '\n');
+        System.out.print(" fasttime: " + fasttiem + '\n');
+    }
+
+    /**
+     * Returns time needed to put N random strings of length L into the
+     * Map61B 61bMap.
+     */
+    public static double insertRandom(Map61B<String, Integer> map61B, int N, int L) {
+        Stopwatch sw = new Stopwatch();
+        String s = "cat";
+        for (int i = 0; i < N; i++) {
+            s = StringUtils.randomString(L);
+            map61B.put(s, new Integer(i));
+        }
+        return sw.elapsedTime();
+    }
+
+
+    /**
+     * Attempts to insert N random strings of length L into map,
+     * Prints time of the N insert calls, otherwise
+     * Prints a nice message about the error
+     */
+    public static double timeRandomMap61B(Map61B<String, Integer> map, int N, int L) {
+        try {
+            double mapTime = insertRandom(map, N, L);
+  //          System.out.printf(map.getClass() + "        : %.3f sec\n", mapTime);
+            return mapTime;
+        } catch (StackOverflowError e) { 
+            printInfoOnStackOverflow(N, L); 
+        } catch (RuntimeException e) { 
+            e.printStackTrace(); 
+        }
+        return 9999999.9;
+    }
+
+    /**
+     * Attempts to insert N random strings of length L into a HashMap
+     * Prints time of the N insert calls, otherwise
+     * Prints a nice message about the error
+     */
+    public static double timeRandomHashMap(HashMap<String, Integer> hashMap, int N, int L) {
+        try {
+            double javaTime = insertRandom(hashMap, N, L);
+            System.out.printf("Java's Built-in HashMap: %.3f sec\n", javaTime);
+            return javaTime;
+        } catch (StackOverflowError e) {
+            printInfoOnStackOverflow(N, L);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+        return 9999999.9;
+    }
+
+    /**
+     * Returns time needed to put N random strings of length L into the
+     * HashMap hashMap.
+     */
+    public static double insertRandom(HashMap<String, Integer> hashMap, int N, int L) {
+        Stopwatch sw = new Stopwatch();
+        String s = "cat";
+        for (int i = 0; i < N; i++) {
+            s = StringUtils.randomString(L);
+            hashMap.put(s, new Integer(i));
+        }
+        return sw.elapsedTime();
+    }
+
+    /**
+     * Waits for the user on other side of Scanner
+     * to enter a positive int,
+     * and outputs that int
+     */
+    public static int waitForPositiveInt(Scanner input) {
+        int ret = 0;
+        do {
+            while (!input.hasNextInt()) {
+                errorBadIntegerInput();
+                input.next();
+            }
+            ret = input.nextInt();
+            input.nextLine(); //consume \n not taken by nextInt()
+        } while (ret <= 0);
+        return ret;
+    }
+    /* ------------------------------- Private methods ------------------------------- */
+    /**
+     * To be called after catching a StackOverflowError
+     * Prints the error with corresponding N and L
+     */
+    private static void printInfoOnStackOverflow(int N, int L) {
+        System.out.println("--Stack Overflow -- couldn't add " + N 
+                            + " strings of length " + L + ".");
+    }
+
+    /**
+     * Prints a nice message for the user on bad input
+     */
+    private static void errorBadIntegerInput() {
+        System.out.print("Please enter a positive integer: ");
+    }
+
+}
+

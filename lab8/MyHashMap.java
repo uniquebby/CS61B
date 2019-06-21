@@ -10,10 +10,10 @@ import java.util.*;
  * @param <V>
  */
 public class MyHashMap<K , V> implements Map61B<K, V> {
-    private static int initialSize = 16;
-    private static double loadFactor = 1.5;
-    private static double subLoadFactor = 0.75;
-
+    private static int initialSize = 1;//1;//4;
+    private static int subInitialSize = 4;
+    private static double loadFactor = 5.0;//5.0;//3.5;
+    private static double subLoadFactor = 1.5;//1.25;//6.75;
 
     /** the number of Key-value mapping in the map of hashHeads'.*/
     private int headSize;
@@ -65,10 +65,17 @@ public class MyHashMap<K , V> implements Map61B<K, V> {
 
     /** construct a new MyHashMap with given initialSize and loadFactor. */
     public MyHashMap(int initialSize, double loadFactor) {
+        this(initialSize, loadFactor, subLoadFactor, subInitialSize);
+    }
+
+    public MyHashMap(int initialSize, double loadFactor, double subLoadFactor, int subInitialSize) {
         this.size = new int[initialSize];
         this.loadFactor = loadFactor;
-        this.hashHeads = (MyHashMapEntry<K, V>[][]) new MyHashMapEntry[initialSize][3];
+        this.hashHeads = (MyHashMapEntry<K, V>[][]) new MyHashMapEntry[initialSize][subInitialSize];
     }
+
+
+
 
     /** Removes all of the mappings from this map. */
     @Override
