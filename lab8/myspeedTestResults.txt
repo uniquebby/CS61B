@@ -28,3 +28,157 @@
  fasttime: 0.623
  fastinitSize:1 fastsubinitSize:4 fastloadFactor:5.0 fastsubLoadFactor: 1.5
  fasttime: 0.623
+  This program inserts random Strings of length L
+ Into different types of maps as <String, Integer> pairs.
+
+ ------------------------------------N = 1111111--------------------------------
+ initSize:1 subinitSize:1 loadFactor:3.45 subLoadFactor: 0.5
+ fasttime: 1.891333333333333
+ initSize:1 subinitSize:1 loadFactor:3.45 subLoadFactor: 1.0
+ fasttime: 1.5483333333333331
+ initSize:1 subinitSize:1 loadFactor:3.45 subLoadFactor: 4.0
+ fasttime: 1.4016666666666666
+ initSize:1 subinitSize:1 loadFactor:3.45 subLoadFactor: 8.0
+ fasttime: 1.313
+ initSize:1 subinitSize:1 loadFactor:3.45 subLoadFactor: 512.0
+ fasttime: 1.3076666666666668
+ initSize:1 subinitSize:1 loadFactor:3.45 subLoadFactor: 1024.0
+ fasttime: 1.2670000000000001
+ initSize:1 subinitSize:1 loadFactor:3.4699999999999998 subLoadFactor: 1024.0
+ fasttime: 1.2623333333333333
+ initSize:1 subinitSize:1 loadFactor:3.5399999999999983 subLoadFactor: 0.5
+ fasttime: 1.256
+ initSize:1 subinitSize:1 loadFactor:3.549999999999998 subLoadFactor: 2.0
+ fasttime: 1.2556666666666667
+ subinitSize:2----------initSize:1
+ initSize:1 subinitSize:2 loadFactor:3.45 subLoadFactor: 0.5
+ fasttime: 1.2510000000000001
+ initSize:1 subinitSize:2 loadFactor:3.4799999999999995 subLoadFactor: 16.0
+ fasttime: 1.2229999999999999
+
+  This program inserts random 111111 Strings of length
+10 Into different types of maps as <String, Integer> pairs.
+
+ initSize:1 subinitSize:1 loadFactor:0.5 subLoadFactor: 0.5 fasttime: 0.28633333333333333
+ initSize:1 subinitSize:1 loadFactor:0.5 subLoadFactor: 1.0 fasttime: 0.233
+ initSize:1 subinitSize:1 loadFactor:0.5 subLoadFactor: 2.0 fasttime: 0.16233333333333333
+ initSize:1 subinitSize:1 loadFactor:0.5 subLoadFactor: 4.0 fasttime: 0.13033333333333333
+ initSize:1 subinitSize:1 loadFactor:0.5 subLoadFactor: 256.0 fasttime: 0.10333333333333333
+ initSize:1 subinitSize:1 loadFactor:1.0 subLoadFactor: 8.0 fasttime: 0.08133333333333333
+ initSize:1 subinitSize:1 loadFactor:1.0 subLoadFactor: 64.0 fasttime: 0.07966666666666666
+ initSize:1 subinitSize:1 loadFactor:2.0 subLoadFactor: 1.0 fasttime: 0.07466666666666666
+ initSize:1 subinitSize:1 loadFactor:2.0 subLoadFactor: 32.0 fasttime: 0.07433333333333332
+ initSize:1 subinitSize:1 loadFactor:2.0 subLoadFactor: 256.0 fasttime: 0.071
+ initSize:1 subinitSize:1 loadFactor:4.0 subLoadFactor: 1.0 fasttime: 0.06366666666666666
+ initSize:1 subinitSize:1 loadFactor:4.0 subLoadFactor: 16.0 fasttime: 0.04900000000000001
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 128.0 fasttime: 0.04633333333333334
+
+  fastinitSize:1 fastsubinitSize:2 fastloadFactor:9.0 fastsubLoadFactor: 0.75
+ fasttime: 0.010333333333333333  311111
+ [200~ initSize:1 subinitSize:2 loadFactor:8.25 subLoadFactor: 1.25 fasttime: 0.010333333333333333 builtintime: 0.008]
+
+ /usr/lib/jdk-12.0.1/bin/java -javaagent:/usr/local/share/idea-IC-191.7479.19/lib/idea_rt.jar=32829:/usr/local/share/idea-IC-191.7479.19/bin -Dfile.encoding=UTF-8 -classpath /home/bs/learning/cs61b/library-sp19/javalib/algs4.jar:/home/bs/learning/cs61b/library-sp19/javalib/hamcrest-core-1.3.jar:/home/bs/learning/cs61b/library-sp19/javalib/jh61b.jar:/home/bs/learning/cs61b/library-sp19/javalib/junit-4.12.jar:/home/bs/learning/cs61b/library-sp19/javalib/stdlib-package.jar:/home/bs/learning/cs61b/library-sp19/javalib/stdlib.jar:/home/bs/learning/cs61b/library-sp19/javalib/xchart-3.5.1.jar:/home/bs/learning/cs61b/lab8/out/production/lab8 MyTest
+
+ This program inserts random 31111 Strings of length
+10 Into different types of maps as <String, Integer> pairs.
+
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 0.25 fasttime: 0.0496 builtintime: 0.028199999999999996
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 0.3 fasttime: 0.0246 builtintime: 0.012
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 0.35 fasttime: 0.0186 builtintime: 0.011800000000000001
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 0.5499999999999999 fasttime: 0.0186 builtintime: 0.0118
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 0.6 fasttime: 0.0162 builtintime: 0.011000000000000001
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 0.65 fasttime: 0.013000000000000001 builtintime: 0.0078
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 0.7000000000000001 fasttime: 0.0116 builtintime: 0.0072
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 0.7500000000000001 fasttime: 0.010400000000000001 builtintime: 0.008400000000000001
+ initSize:1 subinitSize:1 loadFactor:8.100000000000001 subLoadFactor: 0.8500000000000002 fasttime: 0.01 builtintime: 0.0082
+ initSize:1 subinitSize:1 loadFactor:8.150000000000002 subLoadFactor: 0.8500000000000002 fasttime: 0.01 builtintime: 0.0078
+ initSize:1 subinitSize:1 loadFactor:8.300000000000004 subLoadFactor: 0.7500000000000001 fasttime: 0.01 builtintime: 0.0082
+ subinitSize:2----------initSize:1
+ initSize:1 subinitSize:2 loadFactor:8.150000000000002 subLoadFactor: 0.9000000000000002 fasttime: 0.01 builtintime: 0.0086
+ initSize:1 subinitSize:2 loadFactor:8.550000000000008 subLoadFactor: 0.9000000000000002 fasttime: 0.01 builtintime: 0.008
+ subinitSize:3----------initSize:1
+ /usr/lib/jdk-12.0.1/bin/java -javaagent:/usr/local/share/idea-IC-191.7479.19/lib/idea_rt.jar=37117:/usr/local/share/idea-IC-191.7479.19/bin -Dfile.encoding=UTF-8 -classpath /home/bs/learning/cs61b/library-sp19/javalib/algs4.jar:/home/bs/learning/cs61b/library-sp19/javalib/hamcrest-core-1.3.jar:/home/bs/learning/cs61b/library-sp19/javalib/jh61b.jar:/home/bs/learning/cs61b/library-sp19/javalib/junit-4.12.jar:/home/bs/learning/cs61b/library-sp19/javalib/stdlib-package.jar:/home/bs/learning/cs61b/library-sp19/javalib/stdlib.jar:/home/bs/learning/cs61b/library-sp19/javalib/xchart-3.5.1.jar:/home/bs/learning/cs61b/lab8/out/production/lab8 MyTest
+
+ This program inserts random 61111 Strings of length
+10 Into different types of maps as <String, Integer> pairs.
+
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 0.5 fasttime: 0.1026 builtintime: 0.06420000000000001
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 0.7 fasttime: 0.06820000000000001 builtintime: 0.0436
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 0.8999999999999999 fasttime: 0.06080000000000001 builtintime: 0.021800000000000003
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 1.0999999999999999 fasttime: 0.033600000000000005 builtintime: 0.04
+ initSize:1 subinitSize:1 loadFactor:8.1 subLoadFactor: 0.5 fasttime: 0.033600000000000005 builtintime: 0.0166
+ initSize:1 subinitSize:1 loadFactor:8.1 subLoadFactor: 1.0999999999999999 fasttime: 0.0334 builtintime: 0.038400000000000004
+ initSize:1 subinitSize:1 loadFactor:8.1 subLoadFactor: 1.2999999999999998 fasttime: 0.0328 builtintime: 0.0166
+ initSize:1 subinitSize:1 loadFactor:8.2 subLoadFactor: 0.8999999999999999 fasttime: 0.0328 builtintime: 0.0378
+ initSize:1 subinitSize:1 loadFactor:8.2 subLoadFactor: 1.0999999999999999 fasttime: 0.032600000000000004 builtintime: 0.017
+ initSize:1 subinitSize:1 loadFactor:8.2 subLoadFactor: 1.2999999999999998 fasttime: 0.032 builtintime: 0.041999999999999996
+ initSize:1 subinitSize:1 loadFactor:8.799999999999997 subLoadFactor: 0.8999999999999999 fasttime: 0.0316 builtintime: 0.017
+ subinitSize:2----------initSize:1
+ initSize:1 subinitSize:2 loadFactor:8.2 subLoadFactor: 0.8999999999999999 fasttime: 0.0316 builtintime: 0.016800000000000002
+ initSize:1 subinitSize:2 loadFactor:8.699999999999998 subLoadFactor: 1.4999999999999998 fasttime: 0.0316 builtintime: 0.0166
+ subinitSize:3----------initSize:1
+ initSize:2 subinitSize:1 loadFactor:8.0 subLoadFactor: 1.0999999999999999 fasttime: 0.027600000000000003 builtintime: 0.0456
+ initSize:2 subinitSize:1 loadFactor:8.1 subLoadFactor: 1.2999999999999998 fasttime: 0.027000000000000003 builtintime: 0.054200000000000005
+ initSize:2 subinitSize:1 loadFactor:8.2 subLoadFactor: 1.4999999999999998 fasttime: 0.0268 builtintime: 0.017400000000000002
+ initSize:2 subinitSize:1 loadFactor:8.299999999999999 subLoadFactor: 1.0999999999999999 fasttime: 0.0258 builtintime: 0.0384
+ initSize:2 subinitSize:1 loadFactor:8.399999999999999 subLoadFactor: 0.5 fasttime: 0.0254 builtintime: 0.0164
+ initSize:2 subinitSize:1 loadFactor:8.399999999999999 subLoadFactor: 1.2999999999999998 fasttime: 0.0252 builtintime: 0.04080000000000002
+ initSize:2 subinitSize:1 loadFactor:8.699999999999998 subLoadFactor: 0.7 fasttime: 0.0246 builtintime: 0.016800000000000002
+ subinitSize:2----------initSize:2
+ subinitSize:3----------initSize:2
+ fastinitSize:2 fastsubinitSize:1 fastloadFactor:8.699999999999998 fastsubLoadFactor: 0.7
+ fasttime: 0.0246
+ off = 4, 3
+
+Process finished with exit code 0
+/usr/lib/jdk-12.0.1/bin/java -javaagent:/usr/local/share/idea-IC-191.7479.19/lib/idea_rt.jar=39197:/usr/local/share/idea-IC-191.7479.19/bin -Dfile.encoding=UTF-8 -classpath /home/bs/learning/cs61b/library-sp19/javalib/algs4.jar:/home/bs/learning/cs61b/library-sp19/javalib/hamcrest-core-1.3.jar:/home/bs/learning/cs61b/library-sp19/javalib/jh61b.jar:/home/bs/learning/cs61b/library-sp19/javalib/junit-4.12.jar:/home/bs/learning/cs61b/library-sp19/javalib/stdlib-package.jar:/home/bs/learning/cs61b/library-sp19/javalib/stdlib.jar:/home/bs/learning/cs61b/library-sp19/javalib/xchart-3.5.1.jar:/home/bs/learning/cs61b/lab8/out/production/lab8 MyTest
+
+ This program inserts random 61111 Strings of length 
+10 Into different types of maps as <String, Integer> pairs.
+
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 0.5 fasttime: 0.1014 builtintime: 0.055400000000000005
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 0.7 fasttime: 0.0566 builtintime: 0.043
+ initSize:1 subinitSize:1 loadFactor:8.0 subLoadFactor: 1.0999999999999999 fasttime: 0.03560000000000001 builtintime: 0.028000000000000004
+ initSize:1 subinitSize:1 loadFactor:8.1 subLoadFactor: 0.5 fasttime: 0.034 builtintime: 0.033999999999999996
+ initSize:1 subinitSize:1 loadFactor:8.2 subLoadFactor: 0.8999999999999999 fasttime: 0.033 builtintime: 0.017
+ initSize:1 subinitSize:1 loadFactor:8.2 subLoadFactor: 1.4999999999999998 fasttime: 0.0328 builtintime: 0.016800000000000002
+ initSize:1 subinitSize:1 loadFactor:8.599999999999998 subLoadFactor: 0.8999999999999999 fasttime: 0.0316 builtintime: 0.0172
+ subinitSize:2----------initSize:1
+ subinitSize:3----------initSize:1
+ initSize:2 subinitSize:1 loadFactor:8.0 subLoadFactor: 0.7 fasttime: 0.0252 builtintime: 0.0178
+ initSize:2 subinitSize:1 loadFactor:8.0 subLoadFactor: 0.8999999999999999 fasttime: 0.0246 builtintime: 0.044800000000000006
+ initSize:2 subinitSize:1 loadFactor:8.1 subLoadFactor: 0.5 fasttime: 0.024399999999999998 builtintime: 0.0336
+ initSize:2 subinitSize:1 loadFactor:8.2 subLoadFactor: 0.5 fasttime: 0.0242 builtintime: 0.034199999999999994
+ initSize:2 subinitSize:1 loadFactor:8.499999999999998 subLoadFactor: 1.4999999999999998 fasttime: 0.0242 builtintime: 0.0166
+ initSize:2 subinitSize:1 loadFactor:8.799999999999997 subLoadFactor: 0.7 fasttime: 0.023799999999999998 builtintime: 0.045
+ initSize:2 subinitSize:1 loadFactor:8.899999999999997 subLoadFactor: 0.5 fasttime: 0.0236 builtintime: 0.03480000000000001
+ subinitSize:2----------initSize:2
+ initSize:2 subinitSize:2 loadFactor:8.899999999999997 subLoadFactor: 0.5 fasttime: 0.0236 builtintime: 0.016800000000000002
+ subinitSize:3----------initSize:2
+ fastinitSize:2 fastsubinitSize:2 fastloadFactor:8.899999999999997 fastresizeoff:4 fastresubsizeoff:4 fastsubLoadFactor: 0.5
+ fasttime: 0.0236
+
+Process finished with exit code 0
+
+usr/lib/jdk-12.0.1/bin/java -javaagent:/usr/local/share/idea-IC-191.7479.19/lib/idea_rt.jar=41965:/usr/local/share/idea-IC-191.7479.19/bin -Dfile.encoding=UTF-8 -classpath /home/bs/learning/cs61b/library-sp19/javalib/algs4.jar:/home/bs/learning/cs61b/library-sp19/javalib/hamcrest-core-1.3.jar:/home/bs/learning/cs61b/library-sp19/javalib/jh61b.jar:/home/bs/learning/cs61b/library-sp19/javalib/junit-4.12.jar:/home/bs/learning/cs61b/library-sp19/javalib/stdlib-package.jar:/home/bs/learning/cs61b/library-sp19/javalib/stdlib.jar:/home/bs/learning/cs61b/library-sp19/javalib/xchart-3.5.1.jar:/home/bs/learning/cs61b/lab8/out/production/lab8 MyTest
+
+ This program inserts random 1999999 Strings of length
+10 Into different types of maps as <String, Integer> pairs.
+
+ initSize:1 subinitSize:1 loadFactor:8.9 subLoadFactor: 0.5 fasttime: 3.743 builtintime: 1.311
+ initSize:1 subinitSize:1 loadFactor:8.9 subLoadFactor: 0.7 fasttime: 2.975 builtintime: 1.366
+ initSize:1 subinitSize:1 loadFactor:8.9 subLoadFactor: 0.8999999999999999 fasttime: 2.626 builtintime: 1.373
+ initSize:1 subinitSize:1 loadFactor:9.0 subLoadFactor: 0.7 fasttime: 2.594 builtintime: 1.353
+ initSize:1 subinitSize:1 loadFactor:9.0 subLoadFactor: 0.8999999999999999 fasttime: 2.488 builtintime: 1.323
+ initSize:1 subinitSize:1 loadFactor:9.0 subLoadFactor: 1.0999999999999999 fasttime: 2.223 builtintime: 1.284
+ subinitSize:2----------initSize:1
+ initSize:1 subinitSize:2 loadFactor:8.9 subLoadFactor: 0.7 fasttime: 2.217 builtintime: 1.283
+ initSize:1 subinitSize:2 loadFactor:8.9 subLoadFactor: 1.0999999999999999 fasttime: 2.214 builtintime: 1.285
+ initSize:1 subinitSize:2 loadFactor:8.9 subLoadFactor: 1.4999999999999998 fasttime: 2.194 builtintime: 1.25
+ subinitSize:3----------initSize:1
+ subinitSize:2----------initSize:2
+ subinitSize:3----------initSize:2
+ fastinitSize:1 fastsubinitSize:2 fastloadFactor:8.9 fastresizeoff:4 fastresubsizeoff:4 fastsubLoadFactor: 1.4999999999999998
+ fasttime: 2.194
+
+Process finished with exit code 0

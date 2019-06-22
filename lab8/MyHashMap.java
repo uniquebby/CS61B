@@ -10,16 +10,26 @@ import java.util.*;
  * @param <V>
  */
 public class MyHashMap<K , V> implements Map61B<K, V> {
-    private static int initialSize = 1;//1;//4;
-    private static int subInitialSize = 4;
-    private static double loadFactor = 5.0;//5.0;//3.5;
-    private static double subLoadFactor = 1.5;//1.25;//6.75;
+    private static int initialSize = 2;//2;//2;//2;//4;
+    private static int subInitialSize = 2;//1;
+    private static double loadFactor = 5.58;//5.58
+    private static double subLoadFactor = 1.5;//4.0;//2.0;//4.0;//6.75;
+
+    /** the resize times for every resize. */
+    private static int resizeOff = 3;
+    /** the resize times for every subrsize. */
+    private static int subResizeOff = 3;
 
     /** the number of Key-value mapping in the map of hashHeads'.*/
     private int headSize;
 
     /** the number of Key-value mapping in the map of subarrays'.*/
     private int size[];
+
+    /** the threshold to resize */
+    private int  headThreshold;
+    /** the threshold to subresize */
+    private int threshold[];
 
     /** hash head list */
     private MyHashMapEntry<K, V>[][] hashHeads;
@@ -38,7 +48,6 @@ public class MyHashMap<K , V> implements Map61B<K, V> {
             this.key = k;
             this.value = v;
             this.hash = k.hashCode();
-            this.hash *= this.hash;
             this.next = next;
         }
 
@@ -65,13 +74,18 @@ public class MyHashMap<K , V> implements Map61B<K, V> {
 
     /** construct a new MyHashMap with given initialSize and loadFactor. */
     public MyHashMap(int initialSize, double loadFactor) {
-        this(initialSize, loadFactor, subLoadFactor, subInitialSize);
+        this(initialSize, loadFactor, subLoadFactor, subInitialSize, resizeOff, subResizeOff);
     }
 
-    public MyHashMap(int initialSize, double loadFactor, double subLoadFactor, int subInitialSize) {
+    public MyHashMap(int initialSize, double loadFactor, double subLoadFactor, int subInitialSize,
+                     int resizeOff, int subResizeOff) {
         this.size = new int[initialSize];
         this.loadFactor = loadFactor;
+        this.subLoadFactor = subLoadFactor;
+        this.resizeOff = resizeOff;
+        this.subResizeOff = subResizeOff;
         this.hashHeads = (MyHashMapEntry<K, V>[][]) new MyHashMapEntry[initialSize][subInitialSize];
+        this.headThreshold = initialSize * hashHeads.length;
     }
 
 
@@ -191,29 +205,32 @@ public class MyHashMap<K , V> implements Map61B<K, V> {
     /** return the hash of entry. */
     public int hash(K key) {
         int hash = key.hashCode();
-        hash = hash * hash;
-        return  ((hash ^ (hash >>> 16)) & 0x7FFFFFFF) & (hashHeads.length - 1);
+        hash ^= (hash >>> 20) ^ (hash >>> 12);
+        return  hash & (hashHeads.length - 1);
     }
 
     public int hash(MyHashMapEntry<K, V> e) {
-        return (e.hash ^ (e.hash >>> 16)) & 0x7FFFFFFF & (hashHeads.length -1);
+        int hash = e.hash;
+        return  hash & (hashHeads.length - 1);
     }
 
     /** return the hash of entry for subarray.*/
     public int subHash(K key, int subArrayIndex) {
         int hash = key.hashCode();
-        hash = hash * hash;
-        return (hash ^ (hash >>> 8)) & (hashHeads[subArrayIndex].length - 1);
+        hash ^= (hash >>> 15) ^ (hash >>> 7);
+        return hash & (hashHeads[subArrayIndex].length - 1);
     }
 
     /** return the hash of entry for a temp array with length.*/
     public int subHash(MyHashMapEntry<K, V> e, int length) {
-        return ((e.hash) ^ (e.hash >>> 8)) & (length - 1);
+        int hash = e.hash;
+        hash ^= (hash >>> 15) ^ (hash >>> 7);
+        return hash & (length - 1);
     }
 
     /** double the maxSize of hashHeads */
     public void resize() {
-        MyHashMap<K, V> temp = new MyHashMap<>(hashHeads.length << 1);
+        MyHashMap<K, V> temp = new MyHashMap<>((int)((hashHeads.length << resizeOff)));
         MyHashMapIterator iterator = new MyHashMapIterator();
         MyHashMapEntry<K, V> e;
         int subArrayIndex, bucketNum;
@@ -230,7 +247,7 @@ public class MyHashMap<K , V> implements Map61B<K, V> {
 
     /** double the maxSize of subarray. */
     public void resize(int subArrayIndex) {
-        MyHashMapEntry<K, V>[] temp = new MyHashMapEntry[hashHeads[subArrayIndex].length << 1];
+        MyHashMapEntry<K, V>[] temp = new MyHashMapEntry[(int)((hashHeads[subArrayIndex].length << subResizeOff))];
         MyHashMapIterator iterator = new MyHashMapIterator(subArrayIndex);
         MyHashMapEntry<K, V> e;
         int bucketNum;

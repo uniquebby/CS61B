@@ -10,49 +10,71 @@ import edu.princeton.cs.algs4.Stopwatch;
 public class MyTest {
     /**
      * Requests user input and performs tests of three different set
-     * implementations. ARGS is unused. 
+     * implementations. ARGS is unused.
      */
     public static void main(String[] args) throws IOException {
-        int N = 599999;
-        int L = 20;
+        int N = 999;
+        int L = 10;
 
         System.out.println("\n This program inserts random "
-                           + "Strings of length L\n"
+                           + N
+                           + " Strings of length \n"
+                           + L
                            + " Into different types of maps "
                            + "as <String, Integer> pairs.\n");
 
-        String repeat = "y";
-        int fastsize = 0, fastsubsize = 0;
-        double fastld = 0, fastsubld = 0, fasttiem = 9999999.9, temptiem;
-        for (int initSize = 1; initSize <= 4; initSize += 1) {
-            for (int subinitSize = 1; subinitSize <= 16; ++subinitSize) {
-                for (double loadFactor = 0.5; loadFactor <= 16.0; loadFactor += 0.5) {
-                    for (double subLoadFactor = 0.5; subLoadFactor <= 16.0; subLoadFactor += 1) {
-                        temptiem = timeRandomMap61B(new MyHashMap<String, Integer>(initSize, loadFactor, subLoadFactor, subinitSize),
-                            N, L);
-                        //timeRandomHashMap(new HashMap<String, Integer>(),
-                        //       N, L);
-                        if (temptiem < fasttiem) {
-                            fasttiem = temptiem;
-                            fastsize = initSize;
-                            fastsubsize = subinitSize;
-                            fastld = loadFactor;
-                            fastsubld = subLoadFactor;
-                            System.out.print(" initSize:" + initSize);
-                            System.out.print(" subinitSize:" + subinitSize);
-                            System.out.print(" loadFactor:" + loadFactor);
-                            System.out.print(" subLoadFactor: " + subLoadFactor + '\n');
-                            System.out.print(" fasttime: " + fasttiem + '\n');
+        for (; N < 999999; N += 999 ) {
+            String repeat = "y";
+            int fastsize = 0, fastsubsize = 0;
+            double fastld = 0, fastsubld = 0, fasttiem = 9999999.9, builtinfasttiem = 99999.9, temptiem = 0, builtintemptime = 0,
+                    sumtiem = 0, builtinsumtiem = 0;
+            int TIMES = 30;
+            int resizeoff = 3, subresizeoff = 3;
+            for (int initSize = 2; initSize <= 2; initSize += 1) {
+                for (int subinitSize = 2; subinitSize <= 2; subinitSize += 1,
+                        System.out.print(" subinitSize:" + subinitSize + "----------initSize:" + initSize + '\n')) {
+                    for (double loadFactor = 5.55; loadFactor <= 5.55; loadFactor += 0.1) {
+                        for (double subLoadFactor = 0.75; subLoadFactor <= 0.75; subLoadFactor += 0.2) {
+
+                            sumtiem = 0;
+                            builtinsumtiem = 0;
+                            for (int i = 0; i < TIMES; ++i) {
+                                temptiem = timeRandomMap61B(new MyHashMap<String, Integer>(initSize, loadFactor,
+                                        subLoadFactor, subinitSize, resizeoff, subresizeoff), N, L);
+                                builtintemptime = timeRandomHashMap(new HashMap<String, Integer>(),
+                                        N, L);
+                                sumtiem += temptiem;
+                                builtinsumtiem += builtintemptime;
+                            }
+                            temptiem = sumtiem / TIMES;
+                            builtintemptime = builtinsumtiem / TIMES;
+                            //   System.out.print(" avergetime: " + temptiem + '\n');
+                            if (temptiem <= fasttiem) {
+                                builtinfasttiem = builtintemptime;
+                                fasttiem = temptiem;
+                                fastsize = initSize;
+                                fastsubsize = subinitSize;
+                                fastld = loadFactor;
+                                fastsubld = subLoadFactor;
+                                System.out.print(" initSize:" + initSize);
+                                System.out.print(" subinitSize:" + subinitSize);
+                                System.out.print(" loadFactor:" + loadFactor);
+                                System.out.print(" subLoadFactor: " + subLoadFactor);
+                                System.out.print(" fasttime: " + fasttiem);
+                                System.out.print(" builtintime: " + builtinfasttiem + '\n');
+                            }
                         }
                     }
                 }
             }
+            System.out.print(" fastinitSize:" + fastsize);
+            System.out.print(" fastsubinitSize:" + fastsubsize);
+            System.out.print(" fastloadFactor:" + fastld);
+            System.out.print(" fastresizeoff:" + resizeoff);
+            System.out.print(" fastresubsizeoff:" + subresizeoff);
+            System.out.print(" fastsubLoadFactor: " + fastsubld + '\n');
+            System.out.print(" fasttime: " + fasttiem + '\n');
         }
-        System.out.print(" fastinitSize:" + fastsize);
-        System.out.print(" fastsubinitSize:" + fastsubsize);
-        System.out.print(" fastloadFactor:" + fastld);
-        System.out.print(" fastsubLoadFactor: " + fastsubld+ '\n');
-        System.out.print(" fasttime: " + fasttiem + '\n');
     }
 
     /**
@@ -96,7 +118,7 @@ public class MyTest {
     public static double timeRandomHashMap(HashMap<String, Integer> hashMap, int N, int L) {
         try {
             double javaTime = insertRandom(hashMap, N, L);
-            System.out.printf("Java's Built-in HashMap: %.3f sec\n", javaTime);
+//            System.out.printf("Java's Built-in HashMap: %.3f sec\n", javaTime);
             return javaTime;
         } catch (StackOverflowError e) {
             printInfoOnStackOverflow(N, L);
