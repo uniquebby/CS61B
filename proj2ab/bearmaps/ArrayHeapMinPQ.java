@@ -8,14 +8,16 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     private static final int NO_CHILD = -1;
     private ArrayList<Node> heap;
     /* BST tree root */
-    private Node tree;
+    public Node tree;
 
-    private class Node implements Comparable<T>{
+    public class Node implements Comparable<T>,TreePrintUtil.TreeNode{
         private T item;
         private double priority;
 
         /** index in heap. */
-        int index ;
+        int level;
+        int index;
+        long hash;
         Node left, right, parent;
 
         Node(T item, double p) {
@@ -23,25 +25,82 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
             this.priority = p;
             this.index = heap.size();
             this.left = this.right = this.parent = null;
+            this.hash = (this.item.hashCode() * 0x5DEECE66DL + 0xBL) & ((1L << 32) - 1);
         }
 
         @Override
         public int compareTo(T o) {
-            int h1 = this.hashCode();
+//            int h1 = this.item.hashCode();
             int h2 = o.hashCode();
-            if ((((h1 >>> 16) ^ h2) & 0x1) == 0) {
-                return -1;
-            } else {
-                return 1;
-            }
+//            long res1 = (h1 * 0x5DEECE66DL + 0xBL) & ((1L << 48) - 1);
+            long res1 = this.hash;
+            long res2 = ((h2) * 0x5DEECE66DL + 0xBL) & ((1L << 32) - 1);
+//            h1 = (823543 * h1) & 0x00FFFFFF;
+//            h2 = (823543 * h2) & 0x00FFFFFF;
+            return (int)(res1 - res2);
+//            return h1 - h2;
         }
 
-        /* remove child node that '==' to n */
+        @Override
+        public String toString() {
+            return " [" + this.item + "] ";
+        }
+
+        @Override
+        public String getPrintInfo() {
+            return this.toString();
+        }
+
+        @Override
+        public TreePrintUtil.TreeNode getLeftChild() {
+            return this.left;
+        }
+
+        @Override
+        public TreePrintUtil.TreeNode getRightChild() {
+            return this.right;
+        }
+
+        @Override
+        public int getLevel() {
+            return level;
+        }
+
+        @Override
+        public void setLevel(int level) {
+            this.level = level;
+        }
+
+        /* remove child node that '==' to n, and adjust the chile node of
+        *  n node.there is no situation that n has also left and right child.*/
         void removeChild(Node n) {
+//            if (n.item.equals(476) || (n.right != null && n.right.item.equals(476))
+//                || (n.left != null && n.left.item.equals(476))) {
+//                System.out.println("fkkkkkkkkkkkk");
+//            }
+            n.parent = null;
             if (this.left == n) {
-                this.left = null;
+                if (n.right != null) {
+                    this.left = n.right;
+                    n.right.parent = this;
+                } else if (n.left != null){
+                    this.left = n.left;
+                    n.left.parent = this;
+                } else {
+                    this.left = null;
+                }
             } else if (this.right == n) {
-                this.right = null;
+                if (n.left != null) {
+                    this.right = n.left;
+                    n.left.parent = this;
+                } else if (n.right != null) {
+                    this.right = n.right;
+                    n.right.parent = this;
+                } else {
+                    this.right = null;
+                }
+            } else if (n == tree) {
+                tree = null;
             }
         }
 
@@ -49,8 +108,14 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
         void replaceChild(Node old, Node newNd) {
             if (this.left == old) {
                 this.left = newNd;
+                newNd.parent = this;
             } else if (this.right == old) {
                 this.right = newNd;
+                newNd.parent = this;
+            } else if (old.parent == old) {
+                old.parent = null;
+                tree = newNd;
+                newNd.parent = newNd;
             }
         }
 
@@ -134,7 +199,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
      * doesn't exist. */
     @Override
     public void changePriority(T item, double priority) {
-        Node node = getBSTNode(item, false);
+        Node node = getBSTNode(item, true);
         if (node == null) {
             throw new NoSuchElementException();
         }
@@ -180,7 +245,6 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
         temp.index = k2;
     }
 
-
     /**
      * Add node to BST tree.
      * @param n
@@ -188,7 +252,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     private void addToBSTree(Node n) {
         if (tree == null) {
             tree = n;
-            tree.parent = tree;
+            n.parent = n;
             return;
         }
         Node cur = tree;
@@ -219,7 +283,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
             return;
         }
         Node t = heap.get(k);
-        if (heap.size() == 0 || (t.left == null && t.right == null)) {
+        if (heap.size() == 0 || (leftChild(k) == NO_CHILD && rightChild(k) == NO_CHILD)) {
             return;
         }
 
@@ -334,22 +398,42 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
 
     /* Remove the node from BST tree.*/
     private void removeFromBST(Node n) {
-        if (n.parent == null) {
-            return;
-        } else if (n.parent == tree) {
-            tree = null;
-        }
-        if (n.left == null && n.left == null) {
-            n.parent.removeChild(n);
-        } else if (n.left != null) {
+//       System.out.println(n.item + " n");
+       if (n.left != null) {
             Node l = getBSTLargest(n.left);
-            l.parent.removeChild(l);
+            if (l.item.equals(476)) {
+//                System.out.println(l.item + " l");
+            }
+            if (l.parent != n ) {
+                l.parent.removeChild(l);
+                l.left = n.left;
+                n.left.parent = l;
+            }
+            if (n.right != null) {
+                l.right = n.right;
+                n.right.parent = l;
+            }
             n.parent.replaceChild(n, l);
-        } else {
+        } else if (n.right != null){
             Node r = getBSTSmallest(n.right);
-            r.parent.removeChild(r);
+//           System.out.println(r.item + " r");
+            if (r.parent != n) {
+                r.parent.removeChild(r);
+                r.right = n.right;
+                n.right.parent = r;
+            }
             n.parent.replaceChild(n, r);
-        }
+        } else {
+           if (n == tree) {
+               tree = null;
+           }
+           else if (n.parent.left == n) {
+               n.parent.left = null;
+           } else {
+               n.parent.right = null;
+           }
+           n.parent = null;
+       }
     }
 
     /* Get the largest node from sub BST tree. */
@@ -362,6 +446,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
         }
         return subtree;
     }
+
     /* Get the largest node from sub BST tree. */
     private Node getBSTSmallest(Node subtree) {
         if(subtree == null) {
