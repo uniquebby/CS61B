@@ -1,7 +1,72 @@
 package bearmaps;
 
+import edu.princeton.cs.algs4.Stopwatch;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import static org.junit.Assert.assertEquals;
 
 public class KDTreeTest {
+
+    public static void main(String[] args) {
+        List<Point> l = new ArrayList<>();
+        l.add(new Point(3889, 4651));
+        l.add(new Point(491, 917));
+        l.add(new Point(4372, 8617));
+        l.add(new Point(215, 2763));
+        l.add(new Point(3238, 6571));
+
+        KDTree kd = new KDTree(l);
+        NaivePointSet naive = new NaivePointSet(l);
+        double x = 3648, y = 9663;
+        Point goal = new Point(x, y);
+        assertEquals(naive.nearest(x, y), kd.nearest(x, y));
+//        assertEquals(kd.nearest(kd.tree, goal, kd.tree).getP(), naive.nearest(x, y));
+    }
+
+
+    @Test
+    public void testNearest() {
+        List<Point> points = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < 100000; ++i) {
+            double x = random.nextInt(10000000), y = random.nextInt(10000000);
+//            points.add(new Point(random.nextInt(10000), random.nextInt(10000)));
+            points.add(new Point(x, y));
+        }
+
+        KDTree kd = new KDTree(points);
+        NaivePointSet naive = new NaivePointSet(points);
+        Stopwatch sw = new Stopwatch();
+        double time1,time2;
+        time1 = time2 = 0;
+
+        for (int i = 0; i < 10000; ++i) {
+            double x = random.nextDouble() * 10000000;
+            double y = random.nextDouble() * 10000000;
+            Point goal = new Point(x, y);
+
+            sw = new Stopwatch();
+//            kd.nearest(kd.tree, goal, kd.tree);
+            Point p1 = kd.nearest(x, y);
+            time1 += sw.elapsedTime();
+
+            sw = new Stopwatch();
+            Point p2 = naive.nearest(x, y);
+            time2 += sw.elapsedTime();
+            assertEquals(p1, p2);
+//            assertEquals(naive.nearest(x, y), kd.nearest(x, y));
+//            assertEquals(naive.nearest(x, y), kd.nearest(kd.tree, goal, kd.tree).getP());
+        }
+        System.out.println(time1);
+        System.out.println(time2);
+//        System.out.println(naive.time);
+//        System.out.println(kd.time);
+        System.out.println(kd.times);
+        System.out.println(naive.times);
+        System.out.println("kd is " + time2/time1 + "x faster than naive.");
+    }
 }

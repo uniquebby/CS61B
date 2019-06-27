@@ -3,6 +3,11 @@ package bearmaps;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
+/**
+ * @author yangbinbin
+ * 2019.06.23
+ * @param <T>
+ */
 public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     private static final int NO_NEED_TO_ADJUST = -1;
     private static final int NO_CHILD = -1;
@@ -10,7 +15,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T>{
     /* BST tree root */
     public Node tree;
 
-    public class Node implements Comparable<T>,TreePrintUtil.TreeNode{
+    private class Node implements Comparable<T>,TreePrintUtil.TreeNode{
         private T item;
         private double priority;
 
