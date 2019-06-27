@@ -16,7 +16,7 @@ public class KDTree {
     private static final int DOWN = 0x8;
     private static final int ALL_DONE = 0x0;
 //    public static double time = 0;
-    public static int times = 0;
+//    public static int times = 0;
 
     public class KDNode {
         Point p;
@@ -35,9 +35,18 @@ public class KDTree {
             return res;
         }
 
+        public double compareTo(Point goal, boolean isLR) {
+            if (isLR) {
+                return this.p.getX() - goal.getX();
+            } else {
+                return this.p.getY() - goal.getY();
+            }
+        }
+
         public Point getP() {
             return p;
         }
+
     }
 
     public class Region {
@@ -112,6 +121,7 @@ public class KDTree {
                 default:
                     return 0;
             }
+
         }
 
         public void setDown(double down) {
@@ -201,6 +211,49 @@ public class KDTree {
         }
     }
 
+    public Point nearestRecursion(Point goal) {
+       Region r = new Region();
+       return nearest(tree, goal, tree, true, r).p;
+    }
+
+    public KDNode nearest(KDNode n, Point goal, KDNode best, boolean isLR, Region r) {
+        if (n == null) {
+            return best;
+        }
+        KDNode goodSide, badSide;
+        Region badRegion;
+        if (n.distance(goal) < best.distance(goal)) {
+            best = n;
+        }
+        if (n.compareTo(goal, isLR) >= 0) {
+            goodSide = n.side1;
+            badSide = n.side2;
+            if (isLR) {
+                badRegion = new Region(n.p.getX(), r.getRight(), r.getUp(), r.getDown());
+                r.setRight(n.p.getX());
+            } else {
+                badRegion = new Region(r.getLeft(), r.getRight(), n.p.getY(), r.getDown());
+                r.setDown(n.p.getY());
+            }
+        } else {
+            goodSide = n.side2;
+            badSide = n.side1;
+            if (isLR) {
+                badRegion = new Region(r.getLeft(), n.p.getX(), r.getUp(), r.getDown());
+                r.setLeft(n.p.getX());
+            }  else {
+                badRegion = new Region(r.getLeft(), r.getRight(), r.getUp(), n.p.getY());
+                r.setUp(n.p.getY());
+            }
+        }
+        best = nearest(goodSide, goal, best, !isLR, r);
+        if (badRegion.distance(goal) < best.distance(goal)) {
+            best = nearest(badSide, goal, best, !isLR, badRegion);
+        }
+        return best;
+    }
+
+
     public Point nearest(double x, double y) {
         if (tree == null) {
             return null;
@@ -221,7 +274,6 @@ public class KDTree {
 
         while (!isCanBeSheared || !sn.empty()) {
             while (!isCanBeSheared) {
-//                ++times;
                 double d = cur.distance(goal);
                 if (d == 0) {
                     return cur.p;
@@ -231,8 +283,6 @@ public class KDTree {
                 }
                 sn.push(cur);
                 sr.push(curRegion);
-                curRegion = new Region(curRegion.getLeft(), curRegion.getRight(),
-                        curRegion.getUp(), curRegion.getDown());
 
                 /* Decide where to go first and save the next direction to stack sd. */
                 if (cur.side1 == null && cur.side2 == null) {
@@ -240,9 +290,12 @@ public class KDTree {
                     break;
                 } else if (cur.side2 == null) {
                     if ((curDirection & (LEFT|RIGHT)) != 0) {
-                        curRegion.setDown(cur.p.getY());
+                        curRegion = new Region(curRegion.getLeft(), curRegion.getRight(),
+                                        curRegion.getUp(), cur.p.getY());
                         curDirection = UP;
                     } else {
+                        curRegion = new Region(curRegion.getLeft(), cur.p.getX(),
+                                        curRegion.getUp(), curRegion.getDown());
                         curRegion.setRight(cur.p.getX());
                         curDirection = LEFT;
                     }
@@ -250,40 +303,65 @@ public class KDTree {
                     cur = cur.side1;
                 } else if (cur.side1 == null) {
                     if ((curDirection & (LEFT|RIGHT)) != 0) {
-                        curRegion.setUp(cur.p.getY());
+                        curRegion = new Region(curRegion.getLeft(), curRegion.getRight(),
+                                        cur.p.getY(), curRegion.getDown());
                         curDirection = DOWN;
                     } else {
-                        curRegion.setLeft(cur.p.getX());
+                        curRegion = new Region(cur.p.getX(), curRegion.getRight(),
+                                        curRegion.getUp(), curRegion.getDown());
                         curDirection = RIGHT;
                     }
                     sd.push(ALL_DONE);
                     cur = cur.side2;
                 } else {
-                    if (Point.distance(cur.side1.p, goal) <= Point.distance(cur.side2.p, goal)){
-                        if ((curDirection & (LEFT|RIGHT)) != 0) {
-                            curRegion.setDown(cur.p.getY());
+                    double distance1,distance2;
+                    if ((curDirection & (LEFT|RIGHT)) != 0) {
+                        Region ru = new Region(curRegion.getLeft(), curRegion.getRight(),
+                                        curRegion.getUp(), cur.p.getY());
+
+                        Region rd = new Region(curRegion.getLeft(), curRegion.getRight(),
+                                        cur.p.getY(), curRegion.getDown());
+                        distance1 = ru.distance(goal);
+                        distance2 = rd.distance(goal);
+
+                        if (distance1 <= distance2) {
+                            curRegion = ru;                           //up
                             curDirection = UP;
                             sd.push(DOWN);
+                            cur = cur.side1;
                         } else {
-                            curRegion.setRight(cur.p.getX());
-                            curDirection = LEFT;
-                            sd.push(RIGHT);
-                        }
-                        cur = cur.side1;
-                    } else {
-                        if ((curDirection & (LEFT|RIGHT)) != 0) {
-                            curRegion.setUp(cur.p.getY());
+                            curRegion = rd;
                             curDirection = DOWN;
                             sd.push(UP);
+                            cur = cur.side2;
+                        }
+
+                    } else {
+                        Region rl = new Region(curRegion.getLeft(), cur.p.getX(),
+                        curRegion.getUp(), curRegion.getDown());
+
+                        Region rr = new Region(cur.p.getX(), curRegion.getRight(),
+                        curRegion.getUp(), curRegion.getDown());
+                        distance1 = rl.distance(goal);
+                        distance2 = rr.distance(goal);
+
+                        if (distance1 <= distance2) {
+                            curRegion = rl;
+                            curDirection = LEFT;
+                            sd.push(RIGHT);
+                            cur = cur.side1;
                         } else {
-                            curRegion.setLeft(cur.p.getX());
+                            curRegion = rr;
                             curDirection = RIGHT;
                             sd.push(LEFT);
+                            cur = cur.side2;
                         }
-                        cur = cur.side2;
+                    }
+                    if (distance1 == 0 || distance2 == 0) {
+                        isCanBeSheared = false;
+                        continue;
                     }
                 }
-
 //                    Stopwatch sw = new Stopwatch();
                 isCanBeSheared = isCanBeSheared(curRegion, bestDistance, goal);
 //                    time += sw.elapsedTime();
@@ -329,7 +407,10 @@ public class KDTree {
     }
 
     private boolean isCanBeSheared(Region r, double d, Point goal) {
-        return r.distance(goal) >= d;
+//        Stopwatch sw = new Stopwatch();
+        boolean res = r.distance(goal) >= d;
+//        time += sw.elapsedTime();
+        return res;
     }
 
     public KDNode nearest(KDNode n, Point goal, KDNode best) {

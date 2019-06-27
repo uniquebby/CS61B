@@ -9,7 +9,7 @@ import edu.princeton.cs.algs4.Stopwatch;
  */
 public class NaivePointSet implements PointSet{
     private List<Point> points;
-    public static int times = 0;
+//    public static int times = 0;
 //    public static double time = 0;
 
     public NaivePointSet(List<Point> points) {
@@ -21,10 +21,9 @@ public class NaivePointSet implements PointSet{
         Point p = new Point(x, y);
         double nearestDist = Point.distance(points.get(0), p);
         int i = 1, nearestPt = 0;
+//        Stopwatch sw = new Stopwatch();
         while (i < points.size()) {
-//            Stopwatch sw = new Stopwatch();
             double dis = Point.distance(points.get(i), p);
-//            time += sw.elapsedTime();
 //            times++;
             if (dis  < nearestDist) {
                 nearestPt = i;
@@ -32,6 +31,7 @@ public class NaivePointSet implements PointSet{
             }
             ++i;
         }
+//        time += sw.elapsedTime();
         return new Point(points.get(nearestPt).getX(), points.get(nearestPt).getY());
     }
 }
