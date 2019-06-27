@@ -1,3 +1,4 @@
+
 package bearmaps;
 
 import edu.princeton.cs.algs4.Stopwatch;
@@ -9,6 +10,10 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * @author yangbinbin
+ * 写测试水平有待提高
+ */
 public class KDTreeTest {
 
     public static void main(String[] args) {
