@@ -66,6 +66,7 @@ public class KDTreeTest {
 //        Point p1 = kd.nearestRecursion(goal);
                 p1 = testPoints10000.get(i);
                 p1 = kd.nearest(p1.getX(), p1.getY());
+//                p1 = kd.nearestRecursion(p1);
             }
             time1 += sw.elapsedTime();
 
