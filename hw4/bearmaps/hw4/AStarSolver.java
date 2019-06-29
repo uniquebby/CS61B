@@ -7,6 +7,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author yangbinbin
+ * @param <Vertex>
+ * 2019.06.28
+ */
 public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
     private ArrayHeapMinPQ<Vertex> pq;
     private SolverOutcome outcome;
@@ -15,6 +20,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
     private int numStatesExplored;
     private HashMap<Vertex, DistAndParent> distToAndParentMap;
     private double timeSpent;
+
 
     private class DistAndParent {
         double distTo;
@@ -36,10 +42,10 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
 
         Vertex p;
 //        distToAndParentMap.put(p, new DistAndParent(0, p));
-        Stopwatch sw = new Stopwatch();
         pq.add(start, input.estimatedDistanceToGoal(start, end));
         distToAndParentMap.put(start, new DistAndParent(0, null));
-        while (pq.size() != 0 && pq.getSmallest() != end && timeSpent < timeout) {
+        Stopwatch sw = new Stopwatch();
+        while (pq.size() != 0 && !pq.getSmallest().equals(end) && timeSpent < timeout) {
             p = pq.removeSmallest();
             ++numStatesExplored;
 
@@ -60,7 +66,8 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
 
     }
 
-    public void relax(WeightedEdge<Vertex> e, AStarGraph<Vertex> input, Vertex end) {
+    /** relax the neighbors.*/
+    private void relax(WeightedEdge<Vertex> e, AStarGraph<Vertex> input, Vertex end) {
         Vertex p = e.from(), q = e.to();
         double w = e.weight();
         double distToP = distToAndParentMap.get(p).distTo;
@@ -71,7 +78,8 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
             distToQ = Double.POSITIVE_INFINITY;
         }
         if (distToQ == Double.POSITIVE_INFINITY || distToP + w < distToQ) {
-            distToAndParentMap.put(q, new DistAndParent(distToP + w, p));
+            distToQ = distToP + w;
+            distToAndParentMap.put(q, new DistAndParent(distToQ, p));
             if (pq.contains(q)) {
                 pq.changePriority(q, distToQ + input.estimatedDistanceToGoal(q, end));
             } else {

@@ -45,6 +45,16 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
     private static final String[] REQUIRED_RASTER_RESULT_PARAMS = {"render_grid", "raster_ul_lon",
             "raster_ul_lat", "raster_lr_lon", "raster_lr_lat", "depth", "query_success"};
 
+    /**
+     * All longitude distance.
+     */
+    private static final double ROOT_LONGITUDE_DIST = Constants.ROOT_LRLON - Constants.ROOT_ULLON;
+    /**
+     * All autitude distance.
+     */
+    private static final double ROOT_AUTITUDE_DIST = Constants.ROOT_ULLAT - Constants.ROOT_LRLAT;
+    private static final double ROOT_LON_DDP = ROOT_LONGITUDE_DIST / Constants.TILE_SIZE;
+    private static final double ROOT_AU_DDP = ROOT_AUTITUDE_DIST / Constants.TILE_SIZE;
 
     @Override
     protected Map<String, Double> parseRequestParams(Request request) {
@@ -84,14 +94,79 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      */
     @Override
     public Map<String, Object> processRequest(Map<String, Double> requestParams, Response response) {
-        //System.out.println("yo, wanna know the parameters given by the web browser? They are:");
-        //System.out.println(requestParams);
+        System.out.println("yo, wanna know the parameters given by the web browser? They are:");
+        System.out.println(requestParams);
         Map<String, Object> results = new HashMap<>();
+        double leftLon = requestParams.get("ullon");
+        double rightLon = requestParams.get("lrlon");
+        double downAu = requestParams.get("lrlat");
+        double upAu = requestParams.get("ullat");
+
+        if (leftLon > rightLon && downAu > upAu) {
+            results.put("query_success", false);
+            return results;
+        }
+        int lonLevel = getImageLevelToShow(leftLon, rightLon,
+                                            requestParams.get("w"), ROOT_LON_DDP);
+//        int auLevel = getImageLevelToShow(downAu, upAu,
+//                                            requestParams.get("h"), ROOT_AU_DDP);
+//        int levelToshow = Math.min(lonLevel, auLevel);
+        int levelToshow = lonLevel;
+        int x_start = getReturnImageIndex(leftLon, true, levelToshow);
+        int x_end = getReturnImageIndex(rightLon, true, levelToshow);
+        int y_start = getReturnImageIndex(upAu, false, levelToshow);
+        int y_end = getReturnImageIndex(downAu, false, levelToshow);
+        double curLonDist = ROOT_LONGITUDE_DIST / Math.pow(2, levelToshow);
+        double curAuDist = ROOT_AUTITUDE_DIST / Math.pow(2,levelToshow);
+
+        results.put("depth", levelToshow);
+        results.put("query_success", true);
+        results.put("raster_ul_lon", x_start * curLonDist + Constants.ROOT_ULLON);
+        results.put("raster_ul_lat", Constants.ROOT_ULLAT - y_start * curAuDist);
+        results.put("raster_lr_lon", (x_end + 1) * curLonDist + Constants.ROOT_ULLON);
+        results.put("raster_lr_lat", Constants.ROOT_ULLAT - (y_end + 1) * curAuDist);
+        results.put("render_grid", getRenderGrid(levelToshow, x_start, x_end, y_start, y_end));
+
         System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
                 + "your browser.");
         return results;
     }
 
+    private String[][] getRenderGrid(int level, int x_start, int x_end, int y_start, int y_end) {
+        String[][] res = new String[y_end - y_start + 1][x_end - x_start + 1];
+        for (int i = y_start; i <= y_end; ++i)  {
+            for (int j = x_start; j <= x_end; ++j) {
+                res[i - y_start][j - x_start] = "d" + level + "_x" + j + "_y" + i + ".png";
+            }
+        }
+        return res;
+    }
+
+    /*
+        Return the level of image to show.
+     */
+    private int getImageLevelToShow(double small, double large, double pixel, double inialRatio) {
+        double curRaito = (large - small) / pixel;
+        return (int)(log2(inialRatio/curRaito) + 0.584963);       //log2(3) = 0.584963
+    }
+
+    private double log2(double d) {
+        return Math.log(d) / Math.log(2);
+    }
+
+    private int getReturnImageIndex(double titude, boolean isX, int level) {
+        int res;
+        if (isX) {
+            res = (int)((titude - Constants.ROOT_ULLON) / (ROOT_LONGITUDE_DIST / Math.pow(2, level)));
+        } else {
+            res = (int)((Constants.ROOT_ULLAT - titude) / (ROOT_AUTITUDE_DIST / Math.pow(2, level)));
+        }
+        if (res < 0) {
+            return 0;
+        } else {
+            return Math.min((int)Math.pow(2, level) - 1, res);
+        }
+    }
     @Override
     protected Object buildJsonResponse(Map<String, Object> result) {
         boolean rasterSuccess = validateRasteredImgParams(result);
