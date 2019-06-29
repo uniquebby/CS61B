@@ -127,8 +127,8 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         results.put("raster_lr_lat", Constants.ROOT_ULLAT - (y_end + 1) * curAuDist);
         results.put("render_grid", getRenderGrid(levelToshow, x_start, x_end, y_start, y_end));
 
-        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
-                + "your browser.");
+//        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
+//                + "your browser.");
         return results;
     }
 
