@@ -1,5 +1,6 @@
 package bearmaps.proj2c;
 
+import bearmaps.TrieST;
 import bearmaps.hw4.streetmap.Node;
 import bearmaps.hw4.streetmap.StreetMapGraph;
 import bearmaps.proj2ab.KDTreePointSet;
@@ -17,6 +18,7 @@ import java.util.*;
 public class AugmentedStreetMapGraph extends StreetMapGraph {
     private HashMap<Point, Node> nodeMap = new HashMap();
     private KDTreePointSet kdPointSet;
+    private TrieST<String> trie = new TrieST<>();
 
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
@@ -26,6 +28,9 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
          for (Node node : nodes) {
              Point p = new Point(node.lon(), node.lat());
              nodeMap.put(p, node);
+             if (node.name() != null) {
+                 trie.put(node.name(), node.name());
+             }
              points.add(p);
          }
          kdPointSet = new KDTreePointSet(points);
@@ -53,7 +58,38 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * cleaned <code>prefix</code>.
      */
     public List<String> getLocationsByPrefix(String prefix) {
-        return new LinkedList<>();
+        List<String> res = new LinkedList<>();
+        for (String item : trie.keysWithPrefix(prefix)) {
+            res.add(item);
+        }
+        if (res.size() == 0) {
+            char first = prefix.charAt(0);
+            prefix = prefix.replace(first, changeUpperLower(first));
+            System.out.println(prefix);
+            for (String item : trie.keysWithPrefix(prefix)) {
+                res.add(item);
+            }
+            int index = 0;
+            while (res.size() == 0 && index < prefix.length() && index != 0) {
+                index = prefix.indexOf(' ', index) + 1;
+                prefix = prefix.replace(prefix.charAt(index), changeUpperLower(prefix.charAt(index)));
+                for (String item : trie.keysWithPrefix(prefix)) {
+                    res.add(item);
+                }
+            }
+        }
+        return res;
+    }
+
+    private char changeUpperLower(char old) {
+        System.out.println(old - 0);
+        if (old >= 'a' && old <= 'z') {
+            old -= 32;
+        } else {
+            old += 32;
+        }
+
+        return old;
     }
 
     /**
