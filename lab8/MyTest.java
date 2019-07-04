@@ -13,7 +13,7 @@ public class MyTest {
      * implementations. ARGS is unused.
      */
     public static void main(String[] args) throws IOException {
-        int N = 999;
+        int N = 100000;
         int L = 10;
 
         System.out.println("\n This program inserts random "
@@ -23,23 +23,22 @@ public class MyTest {
                            + " Into different types of maps "
                            + "as <String, Integer> pairs.\n");
 
-        for (; N < 999999; N += 999 ) {
             String repeat = "y";
             int fastsize = 0, fastsubsize = 0;
             double fastld = 0, fastsubld = 0, fasttiem = 9999999.9, builtinfasttiem = 99999.9, temptiem = 0, builtintemptime = 0,
                     sumtiem = 0, builtinsumtiem = 0;
-            int TIMES = 30;
-            int resizeoff = 3, subresizeoff = 3;
-            for (int initSize = 2; initSize <= 2; initSize += 1) {
-                for (int subinitSize = 2; subinitSize <= 2; subinitSize += 1,
+            int TIMES = 5;
+            int resizeoff = 2, subresizeoff = 2;
+            for (int initSize = 1; initSize <= 16; initSize += 1) {
+                for (int subinitSize = 1; subinitSize <= 16; subinitSize += 1,
                         System.out.print(" subinitSize:" + subinitSize + "----------initSize:" + initSize + '\n')) {
-                    for (double loadFactor = 5.55; loadFactor <= 5.55; loadFactor += 0.1) {
-                        for (double subLoadFactor = 0.75; subLoadFactor <= 0.75; subLoadFactor += 0.2) {
+                    for (double loadFactor = 0.5; loadFactor <= N; loadFactor *= 1.5) {
+                        for (double subLoadFactor = 0.1; subLoadFactor <= N; subLoadFactor *= 1.5) {
 
                             sumtiem = 0;
                             builtinsumtiem = 0;
                             for (int i = 0; i < TIMES; ++i) {
-                                temptiem = timeRandomMap61B(new MyHashMap<String, Integer>(initSize, loadFactor,
+                                temptiem = timeRandomMap61B(new MyHashBSTMap<String, Integer>(initSize, loadFactor,
                                         subLoadFactor, subinitSize, resizeoff, subresizeoff), N, L);
                                 builtintemptime = timeRandomHashMap(new HashMap<String, Integer>(),
                                         N, L);
@@ -74,7 +73,6 @@ public class MyTest {
             System.out.print(" fastresubsizeoff:" + subresizeoff);
             System.out.print(" fastsubLoadFactor: " + fastsubld + '\n');
             System.out.print(" fasttime: " + fasttiem + '\n');
-        }
     }
 
     /**
@@ -176,5 +174,8 @@ public class MyTest {
         System.out.print("Please enter a positive integer: ");
     }
 
+    public static double log2(double d) {
+        return Math.log(d) / Math.log(2);
+    }
 }
 

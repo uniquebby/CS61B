@@ -21,7 +21,8 @@ public class TestMyHashMap {
     //assumes put/size/containsKey/get work
     @Test
     public void sanityClearTest() {
-        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+//        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+        MyHashBSTMap<String, Integer> b = new MyHashBSTMap<String, Integer>();
         for (int i = 0; i < 455; i++) {
             b.put("hi" + i, 1);
             //make sure put is working via containsKey and get
@@ -38,7 +39,8 @@ public class TestMyHashMap {
     // assumes put works
     @Test
     public void sanityContainsKeyTest() {
-        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+//        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+        MyHashBSTMap<String, Integer> b = new MyHashBSTMap<String, Integer>();
         assertFalse(b.containsKey("waterYouDoingHere"));
         b.put("waterYouDoingHere", 0);
         assertTrue(b.containsKey("waterYouDoingHere"));
@@ -47,7 +49,8 @@ public class TestMyHashMap {
     // assumes put works
     @Test
     public void sanityGetTest() {
-        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+//        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+        MyHashBSTMap<String, Integer> b = new MyHashBSTMap<String, Integer>();
         assertEquals(null, b.get("starChild"));
         b.put("starChild", 5);
         assertNotEquals(null, b.get("starChild"));
@@ -59,7 +62,8 @@ public class TestMyHashMap {
     // assumes put works
     @Test
     public void sanitySizeTest() {
-        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+//        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+        MyHashBSTMap<String, Integer> b = new MyHashBSTMap<String, Integer>();
         assertEquals(0, b.size());
         b.put("hi", 1);
         assertEquals(1, b.size());
@@ -72,7 +76,8 @@ public class TestMyHashMap {
     //assumes get/containskey work
     @Test
     public void sanityPutTest() {
-        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+//        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+        MyHashBSTMap<String, Integer> b = new MyHashBSTMap<String, Integer>();
         b.put("hi", 1);
         assertTrue(b.containsKey("hi") && b.get("hi") != null);
     }
@@ -82,7 +87,8 @@ public class TestMyHashMap {
     */
     @Test
     public void sanityKeySetTest() {
-        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+//        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+        MyHashBSTMap<String, Integer> b = new MyHashBSTMap<String, Integer>();
         HashSet<String> values = new HashSet<String>();
         for (int i = 0; i < 455; i++) {
             b.put("hi" + i, 1);   
@@ -99,7 +105,8 @@ public class TestMyHashMap {
      */
     @Test
     public void functionalityTest() {
-        MyHashMap<String, String> dictionary = new MyHashMap<>();
+//        MyHashMap<String, String> dictionary = new MyHashMap<>();
+        MyHashBSTMap<String, String> dictionary = new MyHashBSTMap<>();
         assertEquals(0, dictionary.size());
 
         // can put objects in dictionary and get them
@@ -114,7 +121,8 @@ public class TestMyHashMap {
         assertEquals("kevin", dictionary.get("hello"));
 
         // putting key in multiple times does not affect behavior
-        MyHashMap<String, Integer> studentIDs = new MyHashMap<String, Integer>();
+//        MyHashMap<String, Integer> studentIDs = new MyHashMap<String, Integer>();
+        MyHashBSTMap<String, Integer> studentIDs = new MyHashBSTMap<String, Integer>();
         studentIDs.put("sarah", 12345);
         assertEquals(1, studentIDs.size());
         assertEquals(12345, studentIDs.get("sarah").intValue());
