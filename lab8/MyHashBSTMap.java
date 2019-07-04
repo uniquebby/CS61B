@@ -15,8 +15,10 @@ import java.util.Stack;
 public class MyHashBSTMap<K , V> implements Map61B<K, V> {
     private static int initialSize = 2;//2;//2;//2;//4;
     private static int subInitialSize = 2;//1;
-    private static double loadFactor = 5.58;//5.58
-    private static double subLoadFactor = 1.5;//4.0;//2.0;//4.0;//6.75;
+    private static double loadFactor = 0.75;//5.58
+    private static double subLoadFactor = 0.75;//4.0;//2.0;//4.0;//6.75;
+
+    private static int sizeToBST = 8;
 
     /** the resize times for every resize. */
     private static int resizeOff = 1;
@@ -30,9 +32,9 @@ public class MyHashBSTMap<K , V> implements Map61B<K, V> {
     private int size[];
 
     /** the threshold to resize */
-    private int  headThreshold;
+//    private int  headThreshold;
     /** the threshold to subresize */
-    private int threshold[];
+//    private int threshold[];
 
     /** hash head list */
     private MyHashMapEntry<K, V>[][] hashHeads;
@@ -46,6 +48,8 @@ public class MyHashBSTMap<K , V> implements Map61B<K, V> {
         V value;
         int hash;
         int subHash;
+        boolean isBST;
+        int size;
         MyHashMapEntry<K, V> left;
         MyHashMapEntry<K, V> right;
 
@@ -54,15 +58,28 @@ public class MyHashBSTMap<K , V> implements Map61B<K, V> {
             this.value = v;
             this.hash = k.hashCode();
             this.subHash = (int) ((this.hash * 0x5DEECE66DL + 0xBL) & ((1L << 31) - 1));
-            hash ^= (hash >>> 16);
+            hash ^= (hash >>> 20) ^ (hash >>>12);
             this.left = this.right = null;
+            isBST = false;
+            size = 1;
         }
 
-        /*
-        MyHashMapEntry addFirst(K k, V v) {
-            return new MyHashMapEntry<K, V>(k, v, this);
+        MyHashMapEntry(MyHashMapEntry<K, V> e) {
+            this.key = e.key;
+            this.value = e.value;
+            this.hash = e.hash;
+            this.subHash = e.subHash;
+            this.left = this.right = null;
+            isBST = false;
+            size = 1;
         }
-         */
+
+        MyHashMapEntry addFirst(K k, V v) {
+            MyHashMapEntry<K, V> res =  new MyHashMapEntry<K, V>(k, v);
+            res.right = this;
+            res.size = this.size + 1;
+            return res;
+        }
 
         void addToBST(K k, V v) {
             MyHashMapEntry<K, V> node = this;
@@ -105,20 +122,20 @@ public class MyHashBSTMap<K , V> implements Map61B<K, V> {
                 }
             }
         }
-        /*
         MyHashMapEntry addFirst(MyHashMapEntry<K, V> e) {
-            e.next = this;
+            e.right = this;
+            e.left = null;
+            e.size = this.size + 1;
             return e;
         }
-         */
 
         public int compareTo(MyHashMapEntry<K, V> e) {
-            return (int) (hash - e.hash);
+            return (subHash - e.subHash);
         }
 
         public int compareTo(K k) {
              int h = (int) ((k.hashCode() * 0x5DEECE66DL + 0xBL) & ((1L << 31) - 1));
-             return (int) (this.hash - h);
+             return (this.subHash - h);
         }
     }
 
@@ -134,18 +151,19 @@ public class MyHashBSTMap<K , V> implements Map61B<K, V> {
 
     /** construct a new MyHashMap with given initialSize and loadFactor. */
     public MyHashBSTMap(int initialSize, double loadFactor) {
-        this(initialSize, loadFactor, subLoadFactor, subInitialSize, resizeOff, subResizeOff);
+        this(initialSize, loadFactor, subLoadFactor, subInitialSize, resizeOff, subResizeOff, sizeToBST);
     }
 
     public MyHashBSTMap(int initialSize, double loadFactor, double subLoadFactor, int subInitialSize,
-                        int resizeOff, int subResizeOff) {
+                        int resizeOff, int subResizeOff, int sizeToBST) {
         this.size = new int[initialSize];
         this.loadFactor = loadFactor;
         this.subLoadFactor = subLoadFactor;
         this.resizeOff = resizeOff;
         this.subResizeOff = subResizeOff;
         this.hashHeads = (MyHashMapEntry<K, V>[][]) new MyHashMapEntry[initialSize][subInitialSize];
-        this.headThreshold = initialSize * hashHeads.length;
+        this.sizeToBST = sizeToBST;
+//        this.headThreshold = initialSize * hashHeads.length;
     }
 
 
@@ -195,12 +213,17 @@ public class MyHashBSTMap<K , V> implements Map61B<K, V> {
             return null;
         }
         MyHashMapEntry<K, V> e = hashHeads[subArrayIndex][bucketNum];
+        MyHashMapEntry<K, V> p = e;
         while (e != null) {
             if (e.key.equals(key)) {
                 return e;
             }
-            if (e.compareTo(key) >= 0) {
-                e = e.left;
+            if (p.isBST) {
+                if (e.compareTo(key) >= 0) {
+                    e = e.left;
+                } else {
+                    e = e.right;
+                }
             } else {
                 e = e.right;
             }
@@ -240,7 +263,18 @@ public class MyHashBSTMap<K , V> implements Map61B<K, V> {
         if (root == null) {
             hashHeads[subArrayIndex][bucketNum] = new MyHashMapEntry<K, V>(key, value);
         } else {
-            root.addToBST(key, value);
+            if (root.isBST) {
+                root.addToBST(key, value);
+            } else {
+                hashHeads[subArrayIndex][bucketNum] = root.addFirst(key, value);
+                if (root.size >= sizeToBST) {
+                    MyHashMapIterator iterator = new MyHashMapIterator(subArrayIndex, bucketNum);
+                    while (iterator.hasNextOfAt()) {
+                        MyHashMapEntry<K, V> e = iterator.nextOfAt();
+                        putToBST(e, hashHeads[subArrayIndex], bucketNum);
+                    }
+                }
+            }
         }
         ++headSize;
         ++size[subArrayIndex];
@@ -251,55 +285,66 @@ public class MyHashBSTMap<K , V> implements Map61B<K, V> {
         keySet.add(key);
     }
 
+    public void putToBST(MyHashMapEntry<K,V> e, MyHashMapEntry<K, V>[] subArray, int bucketNum) {
+        e.isBST = true;
+        e.left = e.right = null;
+        MyHashMapEntry<K, V> root = subArray[bucketNum];
+        if (root == null || root.equals(e)) {
+            subArray[bucketNum] = e;
+        } else {
+            root.addToBST(e);
+        }
+    }
+
     /**
      * put with a exist entry.
      * @param e entry to put.
      * @param subArray subarray to put in.
      */
     public void putOnly(MyHashMapEntry<K, V> e, MyHashMapEntry<K, V>[] subArray, int bucketNum) {
+        e.isBST = false;
+        e.left = e.right = null;
         MyHashMapEntry<K, V> root = subArray[bucketNum];
         if (root == null) {
             subArray[bucketNum] =  e;
         } else {
-            root.addToBST(e);
+            subArray[bucketNum] = root.addFirst(e);
         }
     }
 
     /** return the hash of entry. */
     public int hash(K key) {
         int hash = key.hashCode();
-        hash ^= (hash >>> 16);
-        return (hash & (hashHeads.length - 1));
+        hash ^= (hash >>> 20) ^ (hash >>> 12);
+        return (hash & (this.hashHeads.length - 1));
     }
 
     public int hash(MyHashMapEntry<K, V> e) {
         int hash = e.hash;
-        return (hash & (hashHeads.length - 1));
+        return (hash & (this.hashHeads.length - 1));
     }
 
     /** return the hash of entry for subarray.*/
     public int subHash(K key, int subArrayIndex) {
         int hash = (int) ((key.hashCode()* 0x5DEECE66DL + 0xBL) & ((1L << 31) - 1));
-        hash ^= (hash >>> 15) ^ (hash >>> 7);
-        return (hash & (hashHeads[subArrayIndex].length - 1));
+        return (hash & (this.hashHeads[subArrayIndex].length - 1));
     }
 
     /** return the hash of entry for a temp array with length.*/
     public int subHash(MyHashMapEntry<K, V> e, int length) {
         int hash = e.subHash;
-        hash ^= (hash >>> 15) ^ (hash >>> 7);
         return (hash & (length - 1));
     }
 
     /** double the maxSize of hashHeads */
     public void resize() {
-        MyHashBSTMap<K, V> temp = new MyHashBSTMap<>((int)((this.headSize << resizeOff)));
+        MyHashBSTMap<K, V> temp = new MyHashBSTMap<>((int)((this.hashHeads.length << resizeOff)));
         MyHashMapIterator iterator = new MyHashMapIterator();
         MyHashMapEntry<K, V> e;
         int subArrayIndex, bucketNum;
         while (iterator.hasNext()) {
             e = iterator.nextEntry();
-            e = new MyHashMapEntry<>(e.key, e.value);
+            e = new MyHashMapEntry<>(e);
             subArrayIndex = temp.hash(e);
             bucketNum = temp.subHash(e, temp.hashHeads[subArrayIndex].length);
             temp.putOnly(e, temp.hashHeads[subArrayIndex], bucketNum);
@@ -311,13 +356,13 @@ public class MyHashBSTMap<K , V> implements Map61B<K, V> {
 
     /** double the maxSize of subarray. */
     public void resize(int subArrayIndex) {
-        MyHashMapEntry<K, V>[] temp = new MyHashMapEntry[(int)((this.size[subArrayIndex] << subResizeOff))];
+        MyHashMapEntry<K, V>[] temp = new MyHashMapEntry[(int)((this.hashHeads[subArrayIndex].length << subResizeOff))];
         MyHashMapIterator iterator = new MyHashMapIterator(subArrayIndex);
         MyHashMapEntry<K, V> e;
         int bucketNum;
         while (iterator.hasNextOf()) {
             e = iterator.nextOf();
-            e = new MyHashMapEntry<>(e.key, e.value);
+            e = new MyHashMapEntry<>(e);
             bucketNum = subHash(e, temp.length);
             putOnly(e, temp, bucketNum);
         }
@@ -354,9 +399,20 @@ public class MyHashBSTMap<K , V> implements Map61B<K, V> {
             this.subStack = new Stack();
             getNextNotNull();
             getSubNextNotNull();
+            getSubNextNotNullAt();
         }
 
-
+        MyHashMapIterator(int subIndex, int bucketNum) {
+            this.ArrayIndex = buckets = subBuckets = 0;
+            this.subIndex = subIndex;
+            this.curEntry = hashHeads[0][0];
+            this.subCur = hashHeads[subIndex][bucketNum];
+            this.stack = new Stack();
+            this.subStack = new Stack();
+            getNextNotNull();
+            getSubNextNotNull();
+            getSubNextNotNullAt();
+        }
 
         @Override
         public boolean hasNext() {
@@ -403,6 +459,18 @@ public class MyHashBSTMap<K , V> implements Map61B<K, V> {
             return subCur != null;
         }
 
+        public boolean hasNextOfAt() {
+            return subCur != null;
+        }
+
+        public MyHashMapEntry<K, V> nextOfAt() {
+            p = subCur;
+            subStack.push(p);
+            subCur = subCur.left;
+            getSubNextNotNullAt();
+            return p;
+        }
+
         public MyHashMapEntry<K, V> nextOf() {
             p = subCur;
             subStack.push(p);
@@ -426,6 +494,16 @@ public class MyHashBSTMap<K , V> implements Map61B<K, V> {
                     } else {
                         return;
                     }
+                }
+            }
+        }
+
+        public void getSubNextNotNullAt() {
+            while (subCur == null) {
+                if (subStack.size() != 0) {
+                    subCur = subStack.pop().right;
+                } else {
+                    return;
                 }
             }
         }

@@ -2,6 +2,7 @@ import java.util.HashMap;
 import java.io.IOException;
 import java.util.Scanner;
 import edu.princeton.cs.algs4.Stopwatch;
+import org.junit.Test;
 
 /** Performs a timing test on three different set implementations.
  *  @author Josh Hug
@@ -13,8 +14,8 @@ public class MyTest {
      * implementations. ARGS is unused.
      */
     public static void main(String[] args) throws IOException {
-        int N = 100000;
-        int L = 10;
+        int N = 39999;
+        int L = 20;
 
         System.out.println("\n This program inserts random "
                            + N
@@ -27,40 +28,46 @@ public class MyTest {
             int fastsize = 0, fastsubsize = 0;
             double fastld = 0, fastsubld = 0, fasttiem = 9999999.9, builtinfasttiem = 99999.9, temptiem = 0, builtintemptime = 0,
                     sumtiem = 0, builtinsumtiem = 0;
-            int TIMES = 5;
+            int TIMES = 1;
             int resizeoff = 2, subresizeoff = 2;
-            for (int initSize = 1; initSize <= 16; initSize += 1) {
+            for (int initSize = 1; initSize <= 4; initSize += 1) {
                 for (int subinitSize = 1; subinitSize <= 16; subinitSize += 1,
                         System.out.print(" subinitSize:" + subinitSize + "----------initSize:" + initSize + '\n')) {
-                    for (double loadFactor = 0.5; loadFactor <= N; loadFactor *= 1.5) {
-                        for (double subLoadFactor = 0.1; subLoadFactor <= N; subLoadFactor *= 1.5) {
+                    for (double loadFactor = 4.5; loadFactor <= 7; loadFactor += 0.1) {
+                        for (double subLoadFactor = 1; subLoadFactor <= 9; subLoadFactor *= 1.5) {
+                            for (int sizeToBST = 8; sizeToBST <= 32; sizeToBST++) {
 
-                            sumtiem = 0;
-                            builtinsumtiem = 0;
-                            for (int i = 0; i < TIMES; ++i) {
-                                temptiem = timeRandomMap61B(new MyHashBSTMap<String, Integer>(initSize, loadFactor,
-                                        subLoadFactor, subinitSize, resizeoff, subresizeoff), N, L);
-                                builtintemptime = timeRandomHashMap(new HashMap<String, Integer>(),
-                                        N, L);
-                                sumtiem += temptiem;
-                                builtinsumtiem += builtintemptime;
-                            }
-                            temptiem = sumtiem / TIMES;
-                            builtintemptime = builtinsumtiem / TIMES;
-                            //   System.out.print(" avergetime: " + temptiem + '\n');
-                            if (temptiem <= fasttiem) {
-                                builtinfasttiem = builtintemptime;
-                                fasttiem = temptiem;
-                                fastsize = initSize;
-                                fastsubsize = subinitSize;
-                                fastld = loadFactor;
-                                fastsubld = subLoadFactor;
-                                System.out.print(" initSize:" + initSize);
-                                System.out.print(" subinitSize:" + subinitSize);
-                                System.out.print(" loadFactor:" + loadFactor);
-                                System.out.print(" subLoadFactor: " + subLoadFactor);
-                                System.out.print(" fasttime: " + fasttiem);
-                                System.out.print(" builtintime: " + builtinfasttiem + '\n');
+                                sumtiem = 0;
+                                builtinsumtiem = 0;
+                                for (int i = 0; i < TIMES; ++i) {
+                                    temptiem = timeRandomMap61B(new MyHashBSTMap<String, Integer>(initSize, loadFactor,
+                                            subLoadFactor, subinitSize, getOff(loadFactor), getOff(subLoadFactor), sizeToBST), N, L);
+                                    builtintemptime = timeRandomHashMap(new HashMap<String, Integer>(),
+                                            N, L);
+                                    sumtiem += temptiem;
+                                    builtinsumtiem += builtintemptime;
+                                }
+//                                temptiem = sumtiem / TIMES;
+                                temptiem = sumtiem;
+//                                builtintemptime = builtinsumtiem / TIMES;
+                                builtintemptime = builtinsumtiem;
+                                //   System.out.print(" avergetime: " + temptiem + '\n');
+                                if (temptiem <= fasttiem) {
+                                    builtinfasttiem = builtintemptime;
+                                    fasttiem = temptiem;
+                                    fastsize = initSize;
+                                    fastsubsize = subinitSize;
+                                    fastld = loadFactor;
+                                    fastsubld = subLoadFactor;
+                                }
+                                    System.out.print(" initSize:" + initSize);
+                                    System.out.print(" subinitSize:" + subinitSize);
+                                    System.out.print(" loadFactor:" + loadFactor);
+                                    System.out.print(" subLoadFactor: " + subLoadFactor);
+                                    System.out.print(" fasttime: " + fasttiem);
+                                    System.out.print(" temptiem: " + temptiem);
+                                    System.out.print(" builtintime: " + builtinfasttiem + '\n');
+                                    System.out.print(" sizetobst: " + sizeToBST + '\n');
                             }
                         }
                     }
@@ -176,6 +183,19 @@ public class MyTest {
 
     public static double log2(double d) {
         return Math.log(d) / Math.log(2);
+    }
+
+    public static int getOff(double factor) {
+        if (factor <= 1) {
+            return 1;
+        } else {
+            return (int) (log2(factor) + 1.58);
+        }
+    }
+
+    @Test
+    public void testgetoff() {
+        System.out.println(getOff(4));
     }
 }
 
